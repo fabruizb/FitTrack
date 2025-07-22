@@ -20,7 +20,7 @@ export default function HomePage() {
                 </p>
                 <div className="space-y-4 sm:space-y-0 sm:space-x-4 flex flex-col sm:flex-row">
                     <ShinyButton href="/signup">
-                        Registro <ArrowRight className="h-5 w-5" />
+                        Registro <ArrowRight className="h-5 w-5" />git config --global user.name
                     </ShinyButton>
                     <ShimmerButton href="/login" background="hsl(var(--secondary))">
                         Al lio
