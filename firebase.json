@@ -1,0 +1,22 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "apphosting": {
+    "backends": [
+      {
+        "id": "fittrack-backend",
+        "region": "us-central1",
+        "allowVpcEgress": false
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "apphosting": {
+          "backendId": "fittrack-backend"
+        }
+      }
+    ]
+  }
+}

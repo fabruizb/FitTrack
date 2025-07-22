@@ -1,0 +1,29 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Rules for the 'workouts' collection
+    match /workouts/{workoutId} {
+      // Allow users to read their own workout entries.
+      // This is important for queries like: db.collection('workouts').where('userId', '==', auth.uid).get()
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      
+      // Allow users to create workout entries for themselves.
+      // The 'userId' in the new document must match the authenticated user's UID.
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      
+      // Allow users to update or delete their own workout entries.
+      // The 'userId' in the existing document must match the authenticated user's UID.
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+
+    // Rules for the 'userProfiles' collection
+    match /userProfiles/{userId} {
+      // Allow users to read and write to their own profile document.
+      // The {userId} wildcard in the path must match the authenticated user's UID.
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
