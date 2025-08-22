@@ -203,28 +203,31 @@ const WorkoutForm: React.FC<{
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="exerciseType"
-              render={({ field }) => (
-                <FormItem className="grid grid-cols-4 items-center gap-4">
-                  <FormLabel className="text-right text-sm">Tipo de Ejercicio</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl className="col-span-3">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar tipo" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {exerciseOptions.map(option => (
-                        <SelectItem key={option} value={option}>{option}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="col-span-4 text-right" />
-                </FormItem>
-              )}
-            />
+          <FormField
+  control={form.control}
+  name="exerciseType"
+  render={({ field }) => (
+    <FormItem className="grid grid-cols-4 items-center gap-4">
+      <FormLabel className="text-right text-sm">Tipo de Ejercicio</FormLabel>
+      <FormControl className="col-span-3">
+        <>
+          <Input
+            type="text"
+            placeholder="Ingresar ejercicio"
+            list="exerciseOptions"
+            {...field}
+          />
+          <datalist id="exerciseOptions">
+            {exerciseOptions.map((option) => (
+              <option key={option} value={option} />
+            ))}
+          </datalist>
+        </>
+      </FormControl>
+      <FormMessage className="col-span-4 text-right" />
+    </FormItem>
+  )}
+/>
             <FormField
               control={form.control}
               name="weight"
