@@ -32,7 +32,7 @@ export default function HomePage() {
       
       <div className="relative z-10 container mx-auto flex flex-col items-center justify-center p-4 text-center">
         <div className="relative h-28 w-full max-w-4xl mb-6">
-          <h1 className="text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-secondary">
+          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-secondary">
             FitTrack
           </h1>
         </div>
