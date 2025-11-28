@@ -16,7 +16,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { db } from '@/lib/firebase';
-// CAMBIADO: Importar doc y updateDoc para la lógica de edición/actualización
 import { collection, addDoc, query, where, getDocs, Timestamp, doc, updateDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { parseISO, getISOWeek, getYear, format, differenceInCalendarDays } from 'date-fns';
@@ -194,10 +193,8 @@ const exerciseOptions = [
 const WorkoutForm: React.FC<{
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  // CAMBIADO: Recibe los datos iniciales para el modo edición
   initialData: WorkoutEntry | null;
-  // CAMBIADO: Handler unificado para creación y edición
-  onSubmitForm: (data: WorkoutFormData, isEdit: boolean, workoutId?: string) => void;
+ onSubmitForm: (data: WorkoutFormData, isEdit: boolean, workoutId?: string) => void;
 }> = ({ isOpen, onOpenChange, initialData, onSubmitForm }) => {
   const isEditMode = !!initialData;
   const form = useForm<WorkoutFormData>({
@@ -211,7 +208,6 @@ const WorkoutForm: React.FC<{
     },
   });
 
-  // AÑADIDO: Hook para resetear los valores cuando se cambia de modo o se abre el modal.
   useEffect(() => {
     if (isOpen) {
       form.reset({
@@ -226,19 +222,16 @@ const WorkoutForm: React.FC<{
 
 
   const handleFormSubmit = (data: WorkoutFormData) => {
-    // CAMBIADO: Se pasa el modo (edición o creación) y el ID si existe
-    onSubmitForm(data, isEditMode, initialData?.id);
+   onSubmitForm(data, isEditMode, initialData?.id);
     form.reset(); 
     onOpenChange(false);
   };
 
   return (
-    // CAMBIADO: Usar form.reset() en la limpieza para restaurar los valores iniciales.
     <Dialog open={isOpen} onOpenChange={(open) => { onOpenChange(open); if (!open) form.reset(); }}>
       <DialogContent className="sm:max-w-[425px] ">
         <DialogHeader>
-          {/* CAMBIADO: Título dinámico para edición o creación */}
-          <DialogTitle>{isEditMode ? "Editar Ejercicio" : "Añadir Ejercicio"}</DialogTitle>
+           <DialogTitle>{isEditMode ? "Editar Ejercicio" : "Añadir Ejercicio"}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4 py-4">
@@ -378,7 +371,6 @@ const WorkoutForm: React.FC<{
             />
             <DialogFooter>
               <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                {/* CAMBIADO: Texto dinámico */}
                 {isEditMode ? "Guardar Cambios" : "Añadir Ejercicio"}
               </Button>
               <DialogClose asChild>
@@ -412,11 +404,10 @@ export default function DashboardPage() {
   const [aiAdviceError, setAiAdviceError] = useState<string | null>(null);
   const [userAiQuery, setUserAiQuery] = useState("");
   const [showMotivationAlert, setShowMotivationAlert] = useState(false);
-  // AÑADIDO: Estado para gestionar qué ejercicio se está editando
   const [editingWorkout, setEditingWorkout] = useState<WorkoutEntry | null>(null);
   const bgImage = userProfile?.gender === "Femenino"
     ? "/photo/bg-female.png"
-    : userProfile?.gender === "masculino"
+    : userProfile?.gender === "Masculino"
       ? "/photo/bg-male.png"
       : "/photo/bg-default.jpg";
 
@@ -475,7 +466,6 @@ export default function DashboardPage() {
   }, [user, toast, userProfile?.weight]); 
 
   useEffect(() => {
-    // ... (lógica de procesamiento de datos para gráficos/estadísticas sin cambios relevantes a la edición)
     if (!workoutSummaryData || workoutSummaryData.length === 0) {
       const emptyChartData = Array(7).fill(null).map((_, i) => ({ week: `W${i + 1}` }));
       setProcessedCaloriesData(emptyChartData.map(d => ({ ...d, calories: 0, value: 0 })));
@@ -566,7 +556,6 @@ export default function DashboardPage() {
 
   }, [workoutSummaryData, userProfile?.weight]);
 
-  // AÑADIDO: Función para manejar la apertura del formulario en modo edición
   const handleEditWorkout = (workout: WorkoutEntry) => {
     setEditingWorkout(workout);
     setIsWorkoutModalOpen(true);
@@ -581,7 +570,6 @@ export default function DashboardPage() {
   };
 
 
-  // CAMBIADO: Función unificada para manejar la creación y la actualización
   const handleWorkoutSubmit = async (formData: WorkoutFormData, isEdit: boolean, workoutId?: string) => {
     if (!user?.uid || !db) {
       toast({
@@ -592,7 +580,6 @@ export default function DashboardPage() {
       return;
     }
 
-    // Lógica de cálculo de calorías unificada (usando duración por defecto)
     const durationMinutes = DEFAULT_DURATION_MINUTES; 
     const userWeightKg = userProfile?.weight || DEFAULT_USER_WEIGHT_KG;
     const calculatedCalories = calculateCalories(formData.exerciseType, durationMinutes, userWeightKg);
@@ -605,21 +592,16 @@ export default function DashboardPage() {
       sets: formData.series,
       reps: formData.repetitions,
       weight: formData.weight,
-      // Solo actualizamos 'caloriesBurned'
-      caloriesBurned: calculatedCalories,
+     caloriesBurned: calculatedCalories,
     };
 
     try {
       if (isEdit && workoutId) {
-        // Lógica de ACTUALIZACIÓN (UPDATE)
-        const workoutRef = doc(db, "workouts", workoutId);
-        // Usamos updateDoc para enviar solo los campos modificados
-        await updateDoc(workoutRef, workoutData);
+         const workoutRef = doc(db, "workouts", workoutId);
+       await updateDoc(workoutRef, workoutData);
         
-        // Actualizar el estado local
-        setWorkoutSummaryData(prevWorkouts => {
+       setWorkoutSummaryData(prevWorkouts => {
           return prevWorkouts.map(w => 
-            // CAMBIADO: Usar el ID para encontrar el ejercicio a actualizar
             w.id === workoutId ? { ...w, ...workoutData, id: workoutId, createdAt: w.createdAt } : w
           );
         });
@@ -629,7 +611,6 @@ export default function DashboardPage() {
           description: "Los cambios han sido guardados exitosamente.",
         });
       } else {
-        // Lógica de CREACIÓN (ADD)
         const newWorkout = { ...workoutData, createdAt: Timestamp.now() };
         const docRef = await addDoc(collection(db, "workouts"), newWorkout);
         
@@ -731,8 +712,7 @@ export default function DashboardPage() {
               <p className="text-sm text-card-foreground/80">
                 Haz clic en el botón de abajo para añadir una nueva entrada de entrenamiento.
               </p>
-              {/* CAMBIADO: Limpiar el estado de edición antes de abrir el modal para crear */}
-              <Button className="mt-4" onClick={() => { setEditingWorkout(null); setIsWorkoutModalOpen(true); }}>
+             <Button className="mt-4" onClick={() => { setEditingWorkout(null); setIsWorkoutModalOpen(true); }}>
                 <Highlighter action="underline" color="#FF9800">
                   Añadir Ejercicio
                 </Highlighter>
@@ -878,8 +858,7 @@ export default function DashboardPage() {
                       <TableHead className="px-4 py-3 text-left text-card-foreground text-sm font-medium leading-normal">Series</TableHead>
                       <TableHead className="px-4 py-3 text-left text-card-foreground text-sm font-normal leading-normal">Repeticiones</TableHead>
                       <TableHead className="px-4 py-3 text-left text-card-foreground text-sm font-normal leading-normal">Calorías (kcal)</TableHead>
-                      {/* AÑADIDO: Columna de Acción para la edición */}
-                      <TableHead className="px-4 py-3 text-right text-card-foreground text-sm font-normal leading-normal">Acción</TableHead>
+                     <TableHead className="px-4 py-3 text-right text-card-foreground text-sm font-normal leading-normal">Acción</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -911,7 +890,6 @@ export default function DashboardPage() {
                             <TableCell className="h-[72px] px-4 py-2 text-muted-foreground text-sm font-normal leading-normal">{workout.sets !== undefined ? workout.sets : '-'}</TableCell>
                             <TableCell className="h-[72px] px-4 py-2 text-muted-foreground text-sm font-normal leading-normal">{workout.reps !== undefined ? workout.reps : '-'}</TableCell>
                             <TableCell className="h-[72px] px-4 py-2 text-primary text-sm font-bold leading-normal">{workout.caloriesBurned !== undefined ? workout.caloriesBurned.toLocaleString() : '-'}</TableCell>
-                            {/* AÑADIDO: Botón de Edición que llama a handleEditWorkout */}
                             <TableCell className="h-[72px] px-4 py-2 text-right">
                                 <Button 
                                     variant="ghost" 
@@ -935,11 +913,8 @@ export default function DashboardPage() {
       </div>
       <WorkoutForm
         isOpen={isWorkoutModalOpen}
-        // CAMBIADO: Usar el handler que limpia el estado de edición al cerrar
         onOpenChange={handleCloseWorkoutModal}
-        // CAMBIADO: Usar la función unificada de submit
-        onSubmitForm={handleWorkoutSubmit}
-        // AÑADIDO: Pasar el ejercicio que se está editando
+       onSubmitForm={handleWorkoutSubmit}
         initialData={editingWorkout} 
       />
     </div>

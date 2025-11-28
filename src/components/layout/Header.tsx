@@ -76,8 +76,8 @@ export default function Header() {
   let initialsForAvatar: string = "";
 
   if (!loading) {
-    displayNameForAvatar = userProfile?.displayName || user?.displayName;
-    emailForAvatar = user?.email;
+    displayNameForAvatar = userProfile?.displayName || user?.displayName || null;
+    emailForAvatar = user?.email || null;
     initialsForAvatar = getInitials(displayNameForAvatar, emailForAvatar);
 
     if (userProfile?.photoURL && userProfile.photoURL.trim() !== "") {

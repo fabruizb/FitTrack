@@ -24,7 +24,6 @@ interface UserProfile extends UserProfileFormData {
     lastUpdated?: Timestamp;
     displayName?: string | null;
     photoURL?: string | null;
-    gender?: string;
 }
 
 interface AuthContextType {
