@@ -24,6 +24,7 @@ interface UserProfile extends UserProfileFormData {
     lastUpdated?: Timestamp;
     displayName?: string | null;
     photoURL?: string | null;
+    gender?: string;
 }
 
 interface AuthContextType {
@@ -121,7 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const updatedProfile = await fetchUserProfileFromFirestore(user.uid);
             setUserProfile(updatedProfile);
 
-            toast({ title: "Perfil Guardado", description: "Tus datos de perfil han sido guardados en Firestore." });
+            toast({ title: "Perfil Guardado", description: "Tus datos de perfil han sido guardados ." });
         } catch (e: any) {
             setError(e as AuthError);
             toast({ variant: "destructive", title: "Error al Guardar", description: `No se pudo guardar el perfil. ${e.message}` });
@@ -148,6 +149,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 height: data.height,
                 weight: data.weight,
                 trainingGoal: data.trainingGoal,
+                gender: data.gender,
                 createdAt: Timestamp.now(),
                 lastUpdated: Timestamp.now(),
             };

@@ -12,8 +12,8 @@ interface AuthFormWrapperProps {
 
 export function AuthFormWrapper({ title, description, children, footerContent, className }: AuthFormWrapperProps) {
     return (
-        <div className="flex min-h-[calc(100vh-4rem-1px)] items-center justify-center bg-background p-4">
-            <Card className={`w-full max-w-md shadow-xl bg-card text-card-foreground ${className}`}>
+        <div className="flex min-h-[calc(100vh-4rem-1px)] items-center justify-center bg-none p-4">
+            <Card className={`w-full max-w-md shadow-xl  bg-[#023257]/30 backdrop-blur-lg text-card-foreground ${className}`}>
                 <CardHeader className="text-center">
                     <CardTitle className="text-3xl font-headline">{title}</CardTitle>
                     {description && <CardDescription className="text-md text-card-foreground/80 pt-1">{description}</CardDescription>}

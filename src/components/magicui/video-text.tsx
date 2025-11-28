@@ -27,11 +27,11 @@ export const VideoText = ({
                 muted
                 playsInline
             >
-                <source src={src} type="video/webm" />
+                <source src="/video/homevideo.mp4" type="video/mp4" />
                 Tu navegador no soporta la etiqueta de video.
             </video>
             <div className="relative z-10 flex items-center justify-center w-full h-full mix-blend-screen bg-background">
-                <h1 className="text-center font-headline text-7xl font-bold text-black">
+                <h1 className="text-center font-headline text-9xl font-bold text-black">
                     {children}
                 </h1>
             </div>

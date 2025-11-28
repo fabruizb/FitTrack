@@ -8,6 +8,13 @@ export const trainingGoals = [
   "Mejorar Fuerza",
 ] as const;
 
+export const genders = [
+  "Masculino",
+   "Femenino", 
+   "Otro"
+  ] as const;
+
+
 export const SignupSchema = z.object({
   fullName: z.string().min(2, { message: "El nombre completo debe tener al menos 2 caracteres." }),
   email: z.string().email({ message: "Dirección de correo electrónico inválida." }),
@@ -17,6 +24,7 @@ export const SignupSchema = z.object({
   height: z.coerce.number().positive({ message: "La altura debe ser un número positivo." }).min(50, {message: "La altura debe ser al menos 50 cm."}).max(300, {message: "La altura parece incorrecta."}),
   weight: z.coerce.number().positive({ message: "El peso debe ser un número positivo." }).min(20, {message: "El peso debe ser al menos 20 kg."}).max(300, {message: "El peso parece incorrecto."}),
   trainingGoal: z.string().min(1, { message: "Por favor, selecciona un objetivo de entrenamiento." }),
+  gender: z.enum(genders, { required_error: "Por favor, selecciona un género." }).optional(),
 }).refine(data => data.password === data.confirmPassword, {
   message: "Las contraseñas no coinciden.",
   path: ["confirmPassword"],
@@ -37,8 +45,9 @@ export type ResetPasswordFormData = z.infer<typeof ResetPasswordSchema>;
 export const UserProfileSchema = z.object({
   displayName: z.string().min(2, "El nombre debe tener al menos 2 caracteres.").nullable().optional(),
   weight: z.coerce.number().positive("El peso debe ser un número positivo.").optional(),
-  height: z.coerce.number().positive("La altura debe ser un número positivo.").min(50).max(300).optional(), // ✅ Añadido
+  height: z.coerce.number().positive("La altura debe ser un número positivo.").min(50).max(300).optional(), 
   age: z.coerce.number().int().positive("La edad debe ser un número positivo.").min(10).max(120).optional(),
   trainingGoal: z.string().optional(),
+  gender: z.enum(genders, { required_error: "Por favor, selecciona un género." }).optional(),
 });
 export type UserProfileFormData = z.infer<typeof UserProfileSchema>;

@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
-import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
+import { FlickeringGrid } from "@/components/ui/flickering-grid"
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
@@ -17,8 +17,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <div className="flex h-[calc(100vh-4rem-1px)] items-center justify-center bg-background">
-        <LoadingSpinner size="lg" />
+      <div className="flex h-[calc(100vh-4rem-1px)] items-center justify-center ">
+        <FlickeringGrid />
       </div>
     );
   }

@@ -9,11 +9,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import type { SignupFormData } from "@/lib/types";
-import { SignupSchema, trainingGoals } from "@/lib/types";
+import { SignupSchema, trainingGoals, genders } from "@/lib/types";
 import { AuthFormWrapper } from "./AuthFormWrapper";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function SignupForm() {
     const { signup, loading: authContextLoading } = useAuth();
@@ -21,6 +23,7 @@ export function SignupForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const router = useRouter();
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
 
     const form = useForm<SignupFormData>({
         resolver: zodResolver(SignupSchema),
@@ -33,6 +36,7 @@ export function SignupForm() {
             height: "" as unknown as number,
             weight: "" as unknown as number,
             trainingGoal: "",
+            gender: "",
         },
     });
 
@@ -53,17 +57,12 @@ export function SignupForm() {
     return (
         <AuthFormWrapper
             title="Crea tu cuenta"
-            description="Completa tus datos para unirte."
             className="max-w-2xl"
-            footerContent={
-                <p className="text-muted-foreground text-sm">
-                    ¿Ya tienes una cuenta?{" "}
-                    <Button variant="link" asChild className="p-0 h-auto text-accent underline">
-                        <Link href="/login">Inicia sesión</Link>
-                    </Button>
-                </p>
-            }
+
         >
+
+
+
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -248,6 +247,30 @@ export function SignupForm() {
                                 </FormItem>
                             )}
                         />
+
+                        <FormField
+                            control={form.control}
+                            name="gender"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Género</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
+                                        <FormControl>
+                                            <SelectTrigger className="h-12 rounded-lg border bg-muted/30 p-3">
+                                                <SelectValue placeholder="Selecciona tu género" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {genders.map(g => (
+                                                <SelectItem key={g} value={g}>{g}</SelectItem>
+                                            ))}
+
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </div>
 
                     <Button
@@ -261,4 +284,6 @@ export function SignupForm() {
             </Form>
         </AuthFormWrapper>
     );
+
 }
+

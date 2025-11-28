@@ -50,20 +50,20 @@ export function LoginForm() {
 
     return (
         <AuthFormWrapper
-            title="Welcome Back!"
-            description="Log in to access your account."
+            title="Bienvenido de nuevo!"
+            description="acceso a tu cuenta."
             className="max-w-lg"
             footerContent={
                 <p className="text-muted-foreground text-sm">
-                    Don't have an account?{" "}
+                    ¿No tienes una cuenta?{" "}
                     <Button variant="link" asChild className="p-0 h-auto text-accent underline">
-                        <Link href="/signup">Sign up</Link>
+                        <Link href="/signup">Registrarse</Link>
                     </Button>
                 </p>
             }
         >
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 ">
                     <FormField
                         control={form.control}
                         name="email"
@@ -72,9 +72,9 @@ export function LoginForm() {
                                 <FormControl>
                                     <Input
                                         type="email"
-                                        placeholder="you@example.com"
+                                        placeholder="tu@email.com"
                                         {...field}
-                                        className="h-14 rounded-lg border-0 bg-muted p-4 placeholder:text-muted-foreground"
+                                        className="h-14 rounded-lg border-0 bg-muted p-4 placeholder:text-[#022D4E]"
                                         disabled={isLoading}
                                     />
                                 </FormControl>
@@ -93,7 +93,7 @@ export function LoginForm() {
                                             type={showPassword ? "text" : "password"}
                                             placeholder="••••••••"
                                             {...field}
-                                            className="h-14 rounded-lg border-0 bg-muted p-4 placeholder:text-muted-foreground pr-12 w-full"
+                                            className="h-14 rounded-lg border-0 bg-muted p-4 placeholder:text-[#022D4E] pr-12 w-full"
                                             disabled={isLoading}
                                         />
                                     </FormControl>
@@ -104,7 +104,7 @@ export function LoginForm() {
                                         className="absolute right-2 top-1/2 -translate-y-1/2 h-auto p-2 text-muted-foreground hover:text-foreground"
                                         onClick={togglePasswordVisibility}
                                         disabled={isLoading}
-                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                        aria-label={showPassword ? "Hide password" : "Mostrar contraseña"}
                                     >
                                         {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                     </Button>
@@ -112,7 +112,7 @@ export function LoginForm() {
                                 <FormMessage />
                                 <div className="text-right">
                                     <Button variant="link" size="sm" asChild className="p-0 h-auto text-sm text-accent underline">
-                                        <Link href="/reset-password">Forgot password?</Link>
+                                        <Link href="/reset-password">Olvidaste tu contraseña?</Link>
                                     </Button>
                                 </div>
                             </FormItem>
